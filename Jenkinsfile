@@ -100,8 +100,9 @@ pipeline {
             unstash "semgrep-report"
             unstash "trivy-report"
             unstash "owaspzap-report"
-            cd reports/
+            
             sh '''
+              cd reports/
               e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
               w=$(cat semgrep.json | jq | grep -iE '"severity": "WARNING"' | wc -l)
               echo "Semgrep: Found $e errors"
