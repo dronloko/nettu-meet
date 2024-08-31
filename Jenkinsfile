@@ -100,7 +100,7 @@ pipeline {
             //unstash "trivy-report"
             //unstash "owaspzap-report
             script {
-              def jsonText = new File('reports/semgrep.json').text
+              def jsonText = new File('semgrep.json').text
               def json = new groovy.json.JsonSlurper().parseText(jsonText)
               int errorCount = 0
               json.results.each { finding ->
