@@ -96,7 +96,7 @@ pipeline {
       }*/
       stage ('quality gate') {
           steps {
-            unstash "semgrep"
+            unstash "semgrep-report"
             //unstash "trivy-report"
             //unstash "owaspzap-report
             script {
