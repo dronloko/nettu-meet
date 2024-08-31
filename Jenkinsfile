@@ -32,16 +32,16 @@ pipeline {
                 mkdir reports/
                 cd server
                 docker build . -t nettu-meet-server:latest -f Dockerfile
-                trivy image --format cyclonedx --output reports/sbom_server.json nettu-meet-server:latest
-                trivy sbom reports/sbom_server.json
+                trivy image --format cyclonedx --output sbom_server.json nettu-meet-server:latest
+                #trivy sbom sbom_server.json
                 
                 cd ../frontend
                 docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
-                trivy image --format cyclonedx --output reports/sbom_frontend.json nettu-meet-frontend:latest
-                trivy sbom reports/sbom_frontend.json
+                trivy image --format cyclonedx --output sbom_frontend.json nettu-meet-frontend:latest
+                #trivy sbom sbom_frontend.json
                 '''
               }
-              archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+              archiveArtifacts artifacts: '*.json', allowEmptyArchive: true
           }
       }
   }
