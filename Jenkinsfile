@@ -52,12 +52,9 @@ pipeline {
       stage ('deptrack') {
         agent { label "dind" }
         steps {
-          mkdir reports/
-          dir("reports/") {
-              unstash "sbom"
-          }
+          unstash "sbom"
           sh '''
-          ls reports/
+          ls -R .
           '''
         }
       }
