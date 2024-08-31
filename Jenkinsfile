@@ -19,19 +19,21 @@ pipeline {
           }
         }
       }
-      /*stage ('trivy') {
-          agent { label "trivy" }
+      stage ('trivy') {
+          agent { label "dind" }
           steps {
             script {
                 sh '''
+                apk add docker
                 cd server/
                 docker build . -t nettu-meet:latest
                 apk add trivy
-                trivy image --format json --severity HIGH,CRITICAL,WARNING nettu-meet:latest
+                mkdir reports/
+                trivy image --format json --severity HIGH,CRITICAL,WARNING nettu-meet:latest > reports/trivy.json
                 '''
               }
               archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           }
-      }*/
+      }
   }
 }
