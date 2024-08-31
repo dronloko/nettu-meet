@@ -40,9 +40,9 @@ pipeline {
                 #trivy sbom sbom_server.json
                 npm build
                 cd ../frontend
-                npm build
-                docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
-                trivy image --format cyclonedx --output sbom_frontend.json nettu-meet-frontend:latest
+                npm help
+                #docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
+                #trivy image --format cyclonedx --output sbom_frontend.json nettu-meet-frontend:latest
                 #trivy sbom sbom_frontend.json
                 '''
               }
