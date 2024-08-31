@@ -32,7 +32,7 @@ pipeline {
                 mkdir reports/
                 cd server
                 docker build . -t nettu-meet-server:latest -f Dockerfile
-                trivy image --format cyclonedx --output reports/sbom_frontend.json nettu-meet:latest
+                trivy image --format cyclonedx --output reports/sbom_frontend.json nettu-meet-server:latest
                 trivy sbom reports/sbom_server.json
                 cd ../frontend
                 docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
