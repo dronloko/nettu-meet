@@ -16,6 +16,7 @@ pipeline {
               '''
             }
             archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+            stash name: 'reports/semgrep.json', includes: "semgrep"
           }
         }
       }*/
@@ -36,7 +37,7 @@ pipeline {
                 mkdir reports/
                 cd server
                 docker build . -t nettu-meet-server:latest -f Dockerfile
-                trivy image --format cyclonedx -o ../sbom/sbom_server.json nettu-meet-server:latest
+                trivy image --format cyclonedx -o ../reports/sbom_server.json nettu-meet-server:latest
                 trivy sbom -f json -o ../reports/trivy_server.json ../reports/sbom_server.json
                 cd ../frontend
                 docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
@@ -59,6 +60,19 @@ pipeline {
           ls *.json
           '''
         }
+      }
+      stage ('owasp zap') {
+        agent { label "dind" }
+        steps {
+          sh '''
+          curl -L -o ZAP_2.15.0_Linux.tar.gz https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
+          tar xzf ZAP_2.15.0_Linux.tar.gz
+          cd ZAP_2.15.0/
+          zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout reports/owaspzap.json
+          '''
+        }
+        archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+        stash includes: 'reports/owaspzap.json', name: 'owaspzap'
       }
   }
 }
