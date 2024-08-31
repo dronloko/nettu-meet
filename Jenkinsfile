@@ -57,7 +57,7 @@ pipeline {
           -H "Content-Type:multipart/form-data" -H "X-Api-Key:${DEPTRACK_API_KEY}" \
           -F "autoCreate=true" -F "projectName=dronloko" -F "projectVersion=1.0" -F "bom=@sbom.json")
           echo $response_code
-          curl -k -X GET "${DEPTRACK_URL}/api/v1/projects" -H "X-Api-Key:${DEPTRACK_API_KEY}"
+          curl -k -X GET "${DEPTRACK_URL}/api/v1/project" -H "X-Api-Key:${DEPTRACK_API_KEY}"
           '''
         }
       }
@@ -68,7 +68,7 @@ pipeline {
           mkdir reports/
           sudo apt update
           sudo apt install -y wget
-          wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
+          wget -q https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
           tar xzf ZAP_2.15.0_Linux.tar.gz          
           ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout owaspzap.json
           cp owaspzap.json reports/
