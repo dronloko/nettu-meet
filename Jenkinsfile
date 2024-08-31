@@ -21,7 +21,7 @@ pipeline {
               semgrep scan --config=auto . --exclude=venv --json > semgrep.json
               '''
               archiveArtifacts artifacts: 'semgrep.json', allowEmptyArchive: true
-              stash name: 'semgrep.json', includes: "semgrep-report"
+              stash name: 'semgrep.json', includes: "semgrep"
             }
           }
         }
@@ -96,7 +96,7 @@ pipeline {
       }*/
       stage ('quality gate') {
           steps {
-            unstash "semgrep-report"
+            unstash "semgrep"
             //unstash "trivy-report"
             //unstash "owaspzap-report
             script {
