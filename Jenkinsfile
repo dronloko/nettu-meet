@@ -12,7 +12,7 @@ pipeline {
               . venv/bin/activate
               pip install semgrep
               mkdir reports/
-              semgrep --config=auto . --subdir=server/src --subdir=frontend/src --json > reports/semgrep.json
+              semgrep ci --config=auto --json > reports/semgrep.json
               '''
             }
             archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
