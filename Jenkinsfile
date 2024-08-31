@@ -25,11 +25,6 @@ pipeline {
           steps {
             script {
                 sh '''
-                sudo apt-get install wget apt-transport-https gnupg lsb-release
-                curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
-                sudo -E bash nodesource_setup.sh
-                sudo apt-get install -y nodejs
-                npm -v
                 wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
                 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
                 sudo apt-get update
