@@ -13,14 +13,13 @@ pipeline {
               pip install semgrep
               mkdir reports/
               #semgrep scan --config=auto . --exclude=venv --json > reports/semgrep.json
-              semgrep scan --help
               '''
             }
             archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           }
         }
       }
-      stage ('trivy') {
+      /*stage ('trivy') {
           agent { label "trivy" }
           steps {
             script {
@@ -33,6 +32,6 @@ pipeline {
               }
               archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           }
-    }
+      }*/
   }
 }
