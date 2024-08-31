@@ -81,7 +81,7 @@ pipeline {
           stash includes: 'reports/owaspzap.json', name: 'owaspzap-report'
         }
       }
-      /*stage ('defect dojo') {
+      stage ('defect dojo') {
         steps {
           //unstash "semgrep-report"
           unstash "trivy-report"
@@ -89,12 +89,12 @@ pipeline {
           sh '''
           cd reports/
           #curl -X "POST" -kL "${DOJO_URL}/api/v2/import-scan/" -H "accept: application/json" -H "Authorization: Token ${DOJO_API_TOKEN}" -H "Content-Type: multipart/form-data" -F "active=true" -F "verified=true" -F "deduplication_on_engagement=true" -F "minimum_severity=High" -F "scan_date=2024-08-31" -F "engagement_end_date=2024-08-31" -F "group_by=component_name" -F "tags=" -F "product_name=dronloko" -F "file=@semgrep.json;type=application/json" -F "auto_create_context=true" -F "scan_type=Semgrep JSON Report" -F "engagement=1"
-          #curl -X "POST" -kL "${DOJO_URL}/api/v2/import-scan/" -H "accept: application/json" -H "Authorization: Token ${DOJO_API_TOKEN}" -H "Content-Type: multipart/form-data" -F "active=true" -F "verified=true" -F "deduplication_on_engagement=true" -F "minimum_severity=High" -F "scan_date=2024-08-31" -F "engagement_end_date=2024-08-31" -F "group_by=component_name" -F "tags=" -F "product_name=dronloko" -F "file=@trivy.json;type=application/json" -F "auto_create_context=true" -F "scan_type=Trivy Scan" -F "engagement=2"
+          curl -X "POST" -kL "${DOJO_URL}/api/v2/import-scan/" -H "accept: application/json" -H "Authorization: Token ${DOJO_API_TOKEN}" -H "Content-Type: multipart/form-data" -F "active=true" -F "verified=true" -F "deduplication_on_engagement=true" -F "minimum_severity=High" -F "scan_date=2024-08-31" -F "engagement_end_date=2024-08-31" -F "group_by=component_name" -F "tags=" -F "product_name=dronloko" -F "file=@trivy.json;type=application/json" -F "auto_create_context=true" -F "scan_type=Trivy Scan" -F "engagement=2"
           #curl -X "POST" -kL "${DOJO_URL}/api/v2/import-scan/" -H "accept: application/json" -H "Authorization: Token ${DOJO_API_TOKEN}" -H "Content-Type: multipart/form-data" -F "active=true" -F "verified=true" -F "deduplication_on_engagement=true" -F "minimum_severity=High" -F "scan_date=2024-08-31" -F "engagement_end_date=2024-08-31" -F "group_by=component_name" -F "tags=" -F "product_name=dronloko" -F "file=@owaspzap.json;type=application/json" -F "auto_create_context=true" -F "scan_type=ZAP Scan" -F "engagement=3"
-          curl -k -X POST "${DOJO_URL}/api/v2/import-scan/" -H Authorization:"Token ${DOJO_API_TOKEN}" -H "Content-Type:multipart/form-data" -H "accept:application/json" -F scan_type="Trivy Scan" -F "file=@trivy.json;type=application/json" -F "engagement=2" -F "product_name=dronloko"
+          #curl -k -X POST "${DOJO_URL}/api/v2/import-scan/" -H Authorization:"Token ${DOJO_API_TOKEN}" -H "Content-Type:multipart/form-data" -H "accept:application/json" -F scan_type="Trivy Scan" -F "file=@trivy.json;type=application/json" -F "engagement=2" -F "product_name=dronloko"
           '''
         }
-      }*/
+      }
       stage ('quality gate') {
           agent { label "dind" }
           steps {
@@ -136,7 +136,7 @@ pipeline {
             '''
           }
       }
-      stage { 'toxic repos' } {
+      stage ( 'toxic repos' ) {
         agent { label "dind" }
         steps {
           unstash "semgrep-report"
