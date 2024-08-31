@@ -102,8 +102,8 @@ pipeline {
             unstash "trivy-report"
             unstash "owaspzap-report"
             sh '''
-              apt update
-              apt install -y jq
+              sudo apt update
+              sudo apt install -y jq
               cd reports/
               e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
               w=$(cat semgrep.json | jq | grep -iE '"severity": "WARNING"' | wc -l)
