@@ -96,12 +96,14 @@ pipeline {
         }
       }*/
       stage ('quality gate') {
+          agent { label "dind" }
           steps {
             unstash "semgrep-report"
             unstash "trivy-report"
             unstash "owaspzap-report"
-            
             sh '''
+              apt update
+              apt install jq
               cd reports/
               e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
               w=$(cat semgrep.json | jq | grep -iE '"severity": "WARNING"' | wc -l)
