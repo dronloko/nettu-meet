@@ -23,7 +23,8 @@ pipeline {
           agent { label "dind" }
           steps {
             script {
-                sh '''
+                sh 'cat /etc/os-release'
+                /*sh '''
                 sudo apt-get install wget apt-transport-https gnupg lsb-release nodejs
                 wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
                 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
@@ -40,7 +41,7 @@ pipeline {
                 docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
                 trivy image --format cyclonedx --output sbom_frontend.json nettu-meet-frontend:latest
                 #trivy sbom sbom_frontend.json
-                '''
+                '''*/
               }
               archiveArtifacts artifacts: '*.json', allowEmptyArchive: true
           }
