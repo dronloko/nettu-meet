@@ -52,7 +52,7 @@ pipeline {
           sh '''
           ls reports/sbom.json
           cd reports/
-          response_code = $(curl -vv --write-out %{http_code} -X "POST" https://s410-exam.cyber-ed.space:8081/api/v1/bom -H "Content-Type:multipart/form-data" -H "X-Api-Key:${DEPTRACK_API_KEY}" -F "autoCreate=true" -F "projectName=dronloko" -F "projectVersion=${currentBuild.number}" -F "bom=@bom.json")
+          response_code=$(curl -vv --write-out %{http_code} -X "POST" https://s410-exam.cyber-ed.space:8081/api/v1/bom -H "Content-Type:multipart/form-data" -H "X-Api-Key:${DEPTRACK_API_KEY}" -F "autoCreate=true" -F "projectName=dronloko" -F "projectVersion=${currentBuild.number}" -F "bom=@bom.json")
           echo $response_code
           '''
         }
