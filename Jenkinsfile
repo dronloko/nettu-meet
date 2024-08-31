@@ -97,7 +97,7 @@ pipeline {
             -F engagement=2 ^
             -H Content-Type:multipart/form-data ^
             -H accept:application/json ^
-            ${DOJO_URL}/api/v2/import-scan/
+            "${DOJO_URL}/api/v2/import-scan/"
           '''
         }
       }      
