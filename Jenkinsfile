@@ -8,6 +8,7 @@ pipeline {
   }
     stages {
       stage ('semgrep') {
+        agent { label "alpine" }
         steps {
           script {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
