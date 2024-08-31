@@ -1,4 +1,4 @@
-FROM 22-alpine3.19
+FROM node:22-bookworm
 
 # Install DEB dependencies and others.
 RUN \
