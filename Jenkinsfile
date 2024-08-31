@@ -18,10 +18,10 @@ pipeline {
               . venv/bin/activate
               pip install semgrep
               mkdir reports/
-              semgrep scan --config=auto . --exclude=venv --json > semgrep.json
+              semgrep scan --config=auto . --exclude=venv --json > reports/semgrep.json
               '''
               archiveArtifacts artifacts: 'semgrep.json', allowEmptyArchive: true
-              stash name: 'semgrep.json', includes: "semgrep"
+              stash includes: 'reports/semgrep.json', name: 'semgrep-report'
             }
           }
         }
