@@ -95,6 +95,66 @@ pipeline {
           '''
         }
       }
+      stage ('defect dojo 2') {
+        agent { label "dind" }
+        steps {
+          sh '''
+                    curl -k -X 'POST' 'https://s410-exam.cyber-ed.space:8083/api/v2/import-scan/' \
+                      -H "accept: application/json" \
+                      -H "Content-Type: multipart/form-data" \
+                      -H "Authorization: Token c5b50032ffd2e0aa02e2ff56ac23f0e350af75b4"  \
+                      -F "file=@semgrep-report.json" \
+                      -F "minimum_severity=High" \
+                      -F "product_name=dronloko" \
+                      -F "product_type_name=dronloko" \
+                      -F "auto_create_context=True" \
+                      -F "scan_type=Semgrep JSON Report" \
+                      -F "engagement_name=dronloko" \
+                      -F "active=true" \
+                      -F "verified=true" \
+                      -F "test_title=dronloko" \
+                      -F "close_old_findings=true" \
+                      -F "close_old_findings_product_scope=true" \
+                      -F "scan_date=$(date +%F)"
+
+                  curl -k -X 'POST' 'https://s410-exam.cyber-ed.space:8083/api/v2/import-scan/' \
+                      -H "accept: application/json" \
+                      -H "Content-Type: multipart/form-data" \
+                      -H "Authorization: Token c5b50032ffd2e0aa02e2ff56ac23f0e350af75b4"  \
+                      -F "file=@zap-report.json" \
+                      -F "minimum_severity=High" \
+                      -F "product_name=dronloko" \
+                      -F "product_type_name=dronloko" \
+                      -F "auto_create_context=True" \
+                      -F "scan_type=ZAP Scan" \
+                      -F "engagement_name=dronloko" \
+                      -F "active=true" \
+                      -F "verified=true" \
+                      -F "test_title=dronloko" \
+                      -F "close_old_findings=true" \
+                      -F "close_old_findings_product_scope=true" \
+                      -F "scan_date=$(date +%F)"
+
+                  curl -k -X 'POST' 'https://s410-exam.cyber-ed.space:8083/api/v2/import-scan/' \
+                      -H "accept: application/json" \
+                      -H "Content-Type: multipart/form-data" \
+                      -H "Authorization: Token c5b50032ffd2e0aa02e2ff56ac23f0e350af75b4"  \
+                      -F "file=@trivy-report.json" \
+                      -F "minimum_severity=High" \
+                      -F "product_name=dronloko" \
+                      -F "product_type_name=dronloko" \
+                      -F "auto_create_context=True" \
+                      -F "scan_type=Trivy Scan" \
+                      -F "engagement_name=dronloko" \
+                      -F "active=true" \
+                      -F "verified=true" \
+                      -F "test_title=dronloko" \
+                      -F "close_old_findings=true" \
+                      -F "close_old_findings_product_scope=true" \
+                      -F "scan_date=$(date +%F)"
+          '''
+        }
+      }
       stage ('quality gate') {
           agent { label "dind" }
           steps {
