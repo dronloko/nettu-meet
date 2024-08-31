@@ -57,7 +57,7 @@ pipeline {
           -H "Content-Type:multipart/form-data" -H "X-Api-Key:${DEPTRACK_API_KEY}" \
           -F "autoCreate=true" -F "projectName=dronloko" -F "projectVersion=1.0" -F "bom=@sbom.json")
           echo $response_code
-          curl -k -X GET "${DEPTRACK_URL}/api/v1/project" -H "X-Api-Key:${DEPTRACK_API_KEY}"
+          curl -k -X GET "${DEPTRACK_URL}/api/v1/project/dronloko/1.0" -H "X-Api-Key:${DEPTRACK_API_KEY}"
           '''
         }
       }
