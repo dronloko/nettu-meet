@@ -29,7 +29,8 @@ pipeline {
                 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
                 sudo apt-get update
                 sudo apt-get install trivy
-                docker build . -t nettu-meet:latest -f server/Dockerfile
+                cd server
+                docker build . -t nettu-meet:latest -f Dockerfile
                 mkdir reports/
                 trivy image --format json --severity HIGH,CRITICAL,WARNING nettu-meet:latest > reports/trivy.json
                 '''
