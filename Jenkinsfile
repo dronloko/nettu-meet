@@ -20,7 +20,7 @@ pipeline {
               mkdir reports/
               semgrep scan --config=auto . --exclude=venv --json > reports/semgrep.json
               '''
-              archiveArtifacts artifacts: 'semgrep.json', allowEmptyArchive: true
+              archiveArtifacts artifacts: 'reports/semgrep.json', allowEmptyArchive: true
               stash includes: 'reports/semgrep.json', name: 'semgrep-report'
             }
           }
