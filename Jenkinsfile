@@ -31,7 +31,7 @@ pipeline {
                 sudo apt-get install trivy
                 mkdir reports/
                 cd server
-                trivy fs --format cyclondx -o ../reports/sbom.json package-lock.json
+                trivy fs --format cyclonedx -o ../reports/sbom.json package-lock.json
                 #docker build . -t nettu-meet:latest -f Dockerfile
                 #trivy image --format cyclonedx -o ../reports/sbom.json nettu-meet-server:latest
                 trivy sbom -f json -o ../reports/trivy.json ../reports/sbom.json
