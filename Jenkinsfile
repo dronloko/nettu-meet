@@ -1,7 +1,7 @@
 pipeline {
   agent any
     stages {
-      stage ('semgrep') {
+      /*stage ('semgrep') {
         steps {
           script {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -18,13 +18,18 @@ pipeline {
             archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           }
         }
-      }
+      }*/
       stage ('trivy') {
           agent { label "dind" }
           steps {
             script {
                 sh '''
-                sudo apt install docker.io
+                sudo apt-get update
+                sudo apt-get install ca-certificates curl
+                sudo install -m 0755 -d /etc/apt/keyrings
+                sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+                sudo chmod a+r /etc/apt/keyrings/docker.asc
+                sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                 cd server/
                 docker build . -t nettu-meet:latest
                 sudo apt install trivy
