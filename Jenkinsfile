@@ -66,7 +66,8 @@ pipeline {
           mkdir reports/
           curl -L -o ZAP_2.15.0_Linux.tar.gz https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
           tar xzf ZAP_2.15.0_Linux.tar.gz          
-          ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout reports/owaspzap.json
+          ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout ./owaspzap.json
+          cp ./owaspzap.json reports/
           '''
           archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           stash includes: 'reports/owaspzap.json', name: 'owaspzap'
