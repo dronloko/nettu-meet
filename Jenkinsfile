@@ -51,12 +51,12 @@ pipeline {
           unstash "sbom"
           sh '''
           ls reports/sbom.json
+          cd reports/
           response_code=$(curl -k --silent --output /dev/null --write-out %{http_code} \
           -X "POST" "${DEPTRACK_URL}/api/v1/bom" \
           -H "Content-Type:multipart/form-data" -H "X-Api-Key:${DEPTRACK_API_KEY}" \
           -F "autoCreate=true" -F "projectName=dronloko" -F "projectVersion=1.0" -F "bom=@sbom.json")
           echo $response_code
-          projects=$(curl -k "${DEPTRACK_URL}/api/v1/projects" -H "X-Api-Key:${DEPTRACK_API_KEY}"
           '''
         }
       }
