@@ -98,15 +98,16 @@ pipeline {
       stage ('quality gate') {
           steps {
             unstash "semgrep-report"
-            //unstash "trivy-report"
-            //unstash "owaspzap-report
+            unstash "trivy-report"
+            unstash "owaspzap-report
+            cd reports/
             sh '''
               e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
               w=$(cat semgrep.json | jq | grep -iE '"severity": "WARNING"' | wc -l)
               echo "Semgrep: Found $e errors"
               echo "Semgrep: Found $e warnings"
               if [ $e -ge 2 ] || [ $w -gt 10 ]; then
-                echo "Semgrep QualityGate failed";
+                echo "Semgrep QualityGate failed"
                 #exit "Semgrep QualityGate failed"
               fi
               c=$(cat trivy.json | jq | grep -iE "\"severity\": \"CRITICAL" | wc -l )
