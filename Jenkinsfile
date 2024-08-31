@@ -31,8 +31,8 @@ pipeline {
                 sh '''
                 wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
                 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-                sudo apt-get update
-                sudo apt-get install trivy
+                sudo apt update
+                sudo apt install trivy
                 mkdir reports/
                 cd server
                 trivy fs --format cyclonedx -o ../reports/sbom.json package-lock.json
@@ -66,8 +66,8 @@ pipeline {
         steps {
           sh '''
           mkdir reports/
-          apt update
-          apt install wget
+          sudo apt update
+          sudo apt install -y wget
           wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
           tar xzf ZAP_2.15.0_Linux.tar.gz          
           ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout owaspzap.json
