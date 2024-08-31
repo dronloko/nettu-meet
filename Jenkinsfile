@@ -7,7 +7,7 @@ pipeline {
     DOJO_API_TOKEN="c5b50032ffd2e0aa02e2ff56ac23f0e350af75b4"    
   }
     stages {
-      /*stage ('semgrep') {
+      stage ('semgrep') {
         steps {
           script {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -25,7 +25,7 @@ pipeline {
             }
           }
         }
-      }*/
+      }
       stage ('trivy') {
           agent { label "dind" }
           steps {
@@ -63,7 +63,7 @@ pipeline {
           '''
         }
       }
-      /*stage ('owasp zap') {
+      stage ('owasp zap') {
         agent { label "dind" }
         steps {
           sh '''
@@ -79,7 +79,7 @@ pipeline {
           archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           stash includes: 'reports/owaspzap.json', name: 'owaspzap-report'
         }
-      }*/
+      }
       stage ('defect dojo') {
         steps {
           //unstash "semgrep-report"
