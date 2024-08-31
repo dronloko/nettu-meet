@@ -20,7 +20,6 @@ pipeline {
         }
       }
       stage ('trivy') {
-          agent { label "trivy" }
           steps {
             script {
                 sh '''
