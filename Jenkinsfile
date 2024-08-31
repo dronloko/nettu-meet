@@ -34,7 +34,6 @@ pipeline {
                 sudo apt-get update
                 sudo apt-get install trivy
                 mkdir reports/
-                mkdir 
                 cd server
                 docker build . -t nettu-meet-server:latest -f Dockerfile
                 trivy image --format cyclonedx -o ../sbom/sbom_server.json nettu-meet-server:latest
