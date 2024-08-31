@@ -3,8 +3,8 @@ FROM node:14.15.4
 # Install DEB dependencies and others.
 RUN \
     set -x \
-    && apt-get update \
-    && apt-get install -y net-tools build-essential valgrind
+    && sudo apt-get update \
+    && sudo apt-get install -y net-tools build-essential
 
 WORKDIR /app
 
