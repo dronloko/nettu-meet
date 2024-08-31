@@ -71,7 +71,7 @@ pipeline {
           wget -q https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
           tar xzf ZAP_2.15.0_Linux.tar.gz        
           ZAP_2.15.0/zap.sh -cmd -addonupdate -addoninstall wappalyzer -addoninstall pscanrulesBeta
-          ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout $(pwd)/zap.json
+          ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout $(pwd)/owaspzap.json
           cp $(pwd)/owaspzap.json reports/
           '''
           archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
