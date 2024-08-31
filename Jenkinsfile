@@ -14,9 +14,9 @@ pipeline {
               mkdir reports/
               semgrep scan --config=auto . --exclude=venv --json > reports/semgrep.json
               '''
+              archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+              stash name: 'reports/semgrep.json', includes: "semgrep"
             }
-            archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-            stash name: 'reports/semgrep.json', includes: "semgrep"
           }
         }
       }*/
@@ -44,9 +44,9 @@ pipeline {
                 trivy image --format cyclonedx -o ../reports/sbom_frontend.json nettu-meet-frontend:latest
                 trivy sbom -f json -o ../reports/trivy_frontend.json ../reports/sbom_server.json
                 '''
+                archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+                stash includes: 'reports/sbom*.json', name: 'sbom'
               }
-              archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-              stash includes: 'reports/sbom*.json', name: 'sbom'
           }
       }
       stage ('deptrack') {
@@ -69,9 +69,9 @@ pipeline {
           cd ZAP_2.15.0/
           zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout reports/owaspzap.json
           '''
+          archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+          stash includes: 'reports/owaspzap.json', name: 'owaspzap'
         }
-        archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-        stash includes: 'reports/owaspzap.json', name: 'owaspzap'
       }
   }
 }
