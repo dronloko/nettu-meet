@@ -85,6 +85,7 @@ pipeline {
           //unstash "semgrep-report"
           unstash "trivy-report"
           //unstash "owaspzap-report
+          sh '''
           cd reports/
           //curl -X "POST" -kL "{DOJO_URL}/api/v2/import-scan/" -H "accept: application/json" -H "Authorization: Token {DOJO_API_TOKEN}" -H "Content-Type: multipart/form-data" -F "active=true" -F "verified=true" -F "deduplication_on_engagement=true" -F "minimum_severity=High" -F "scan_date=2024-08-31" -F "engagement_end_date=2024-08-31" -F "group_by=component_name" -F "tags=" -F "product_name=dronloko" -F "file=@semgrep.json;type=application/json" -F "auto_create_context=true" -F "scan_type=Semgrep JSON Report" -F "engagement=1"
           curl -X "POST" -kL "{DOJO_URL}/api/v2/import-scan/" -H "accept: application/json" -H "Authorization: Token {DOJO_API_TOKEN}" -H "Content-Type: multipart/form-data" -F "active=true" -F "verified=true" -F "deduplication_on_engagement=true" -F "minimum_severity=High" -F "scan_date=2024-08-31" -F "engagement_end_date=2024-08-31" -F "group_by=component_name" -F "tags=" -F "product_name=dronloko" -F "file=@trivy.json;type=application/json" -F "auto_create_context=true" -F "scan_type=Trivy Scan" -F "engagement=2"
