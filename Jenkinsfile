@@ -24,10 +24,10 @@ pipeline {
           steps {
             script {
                 sh '''
-                apt install docker
+                sudo apt install docker
                 cd server/
                 docker build . -t nettu-meet:latest
-                apt install trivy
+                sudo apt install trivy
                 mkdir reports/
                 trivy image --format json --severity HIGH,CRITICAL,WARNING nettu-meet:latest > reports/trivy.json
                 '''
