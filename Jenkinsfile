@@ -80,7 +80,7 @@ pipeline {
           stash includes: 'reports/owaspzap.json', name: 'owaspzap-report'
         }
       }
-      stage ('defect dojo') {
+      /*stage ('defect dojo') {
         steps {
           //unstash "semgrep-report"
           unstash "trivy-report"
@@ -93,6 +93,27 @@ pipeline {
           curl -k -X POST "${DOJO_URL}/api/v2/import-scan/" -H Authorization:"Token ${DOJO_API_TOKEN}" -H "Content-Type:multipart/form-data" -H "accept:application/json" -F scan_type="Trivy Scan" -F "file=@trivy.json;type=application/json" -F "engagement=2" -F "product_name=dronloko"
           '''
         }
-      }      
+      }*/
+      stage ('quality gate') {
+          steps {
+            unstash "semgrep-report"
+            //unstash "trivy-report"
+            //unstash "owaspzap-report
+            def jsonText = new File('reports/semgrep.json').text
+            def json = new groovy.json.JsonSlurper().parseText(jsonText)
+            int errorCount = 0
+            json.results.each { finding ->
+                if (finding.extra.severity == "ERROR") {
+                    errorCount+=1;
+                }
+            }
+            echo "SEMGREP error count: ${errorCount}"
+            if (errorCount > 5) {
+                echo "SEMGREP QualityGate failed."
+                //error("SEMGREP QualityGate failed.")
+            }
+          }
+      }
+    }
   }
 }
