@@ -99,34 +99,36 @@ pipeline {
             unstash "semgrep-report"
             //unstash "trivy-report"
             //unstash "owaspzap-report
-            e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
-            w=$(cat semgrep.json | jq | grep -iE '"severity": "WARNING"' | wc -l)
-            echo "Semgrep: Found $e errors"
-            echo "Semgrep: Found $e warnings"
-            if [ $e -ge 2 ] || [ $w -gt 10 ]; then
-              echo "Semgrep QualityGate failed";
-              #exit "Semgrep QualityGate failed"
-            fi
-            c=$(cat trivy.json | jq | grep -iE "\"severity\": \"CRITICAL" | wc -l )
-            h=$(cat trivy.json | jq | grep -iE "\"severity\": \"HIGH" | wc -l)
-            m=$(cat trivy.json | jq | grep -iE "\"severity\": \"MEDIUM" | wc -l)
-            l=$(cat trivy.json | jq | grep -iE "\"severity\": \"LOW" | wc -l)
-            echo "trivy: Found $c critical severity findings"
-            echo "trivy: Found $h high severity findings"
-            echo "trivy: Found $m medium severity findings"
-            echo "trivy: Found $l low severity findings"
-            if [ $c -ge 1 ] || [ $h -ge 5 ] || [ $m -ge 10] || [ $l -ge 15]; then
-              echo "Trivy QualityGate failed"
-              #exit("Trivy QualityGate failed")
-            fi
-            c=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"Critical" | wc -l )
-            h=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"High" | wc -l)
-            m=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"Medium" | wc -l)
-            l=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"Low" | wc -l)
-            if [ $c -ge 1 ] || [ $h -ge 10 ] || [ $m -ge 9 ] || [ $l -ge 7 ]; then
-              echo "OWASP ZAP QualityGate failed"
-              #exit("OWASP ZAP QualityGate failed")
-            fi
+            sh '''
+              e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
+              w=$(cat semgrep.json | jq | grep -iE '"severity": "WARNING"' | wc -l)
+              echo "Semgrep: Found $e errors"
+              echo "Semgrep: Found $e warnings"
+              if [ $e -ge 2 ] || [ $w -gt 10 ]; then
+                echo "Semgrep QualityGate failed";
+                #exit "Semgrep QualityGate failed"
+              fi
+              c=$(cat trivy.json | jq | grep -iE "\"severity\": \"CRITICAL" | wc -l )
+              h=$(cat trivy.json | jq | grep -iE "\"severity\": \"HIGH" | wc -l)
+              m=$(cat trivy.json | jq | grep -iE "\"severity\": \"MEDIUM" | wc -l)
+              l=$(cat trivy.json | jq | grep -iE "\"severity\": \"LOW" | wc -l)
+              echo "trivy: Found $c critical severity findings"
+              echo "trivy: Found $h high severity findings"
+              echo "trivy: Found $m medium severity findings"
+              echo "trivy: Found $l low severity findings"
+              if [ $c -ge 1 ] || [ $h -ge 5 ] || [ $m -ge 10] || [ $l -ge 15]; then
+                echo "Trivy QualityGate failed"
+                #exit("Trivy QualityGate failed")
+              fi
+              c=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"Critical" | wc -l )
+              h=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"High" | wc -l)
+              m=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"Medium" | wc -l)
+              l=$(cat owaspzap.json | jq | grep -E "\"riskdesc\": \"Low" | wc -l)
+              if [ $c -ge 1 ] || [ $h -ge 10 ] || [ $m -ge 9 ] || [ $l -ge 7 ]; then
+                echo "OWASP ZAP QualityGate failed"
+                #exit("OWASP ZAP QualityGate failed")
+              fi
+            '''
           }
       }
   }
