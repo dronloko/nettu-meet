@@ -96,21 +96,24 @@ pipeline {
       }*/
       stage ('quality gate') {
           steps {
+            
             unstash "semgrep-report"
             //unstash "trivy-report"
             //unstash "owaspzap-report
-            def jsonText = new File('reports/semgrep.json').text
-            def json = new groovy.json.JsonSlurper().parseText(jsonText)
-            int errorCount = 0
-            json.results.each { finding ->
-                if (finding.extra.severity == "ERROR") {
-                    errorCount+=1;
-                }
-            }
-            echo "SEMGREP error count: ${errorCount}"
-            if (errorCount > 5) {
-                echo "SEMGREP QualityGate failed."
-                //error("SEMGREP QualityGate failed.")
+            script {
+              def jsonText = new File('reports/semgrep.json').text
+              def json = new groovy.json.JsonSlurper().parseText(jsonText)
+              int errorCount = 0
+              json.results.each { finding ->
+                  if (finding.extra.severity == "ERROR") {
+                      errorCount+=1;
+                  }
+              }
+              echo "SEMGREP error count: ${errorCount}"
+              if (errorCount > 5) {
+                  echo "SEMGREP QualityGate failed."
+                  //error("SEMGREP QualityGate failed.")
+              }
             }
           }
       }
