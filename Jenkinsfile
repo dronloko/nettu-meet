@@ -24,7 +24,11 @@ pipeline {
           steps {
             script {
                 sh '''
-                sudo apt-get install wget apt-transport-https gnupg lsb-release nodejs npm
+                sudo apt-get install wget apt-transport-https gnupg lsb-release
+                curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+                sudo apt-get install -y nodejs npm
+                npm -v
+                sudo -E bash nodesource_setup.sh
                 wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
                 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
                 sudo apt-get update
@@ -34,7 +38,7 @@ pipeline {
                 docker build . -t nettu-meet-server:latest -f Dockerfile
                 trivy image --format cyclonedx --output sbom_server.json nettu-meet-server:latest
                 #trivy sbom sbom_server.json
-                
+                npm build
                 cd ../frontend
                 npm build
                 docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
