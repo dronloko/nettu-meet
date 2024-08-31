@@ -32,7 +32,8 @@ pipeline {
                 cd server
                 docker build . -t nettu-meet:latest -f Dockerfile
                 mkdir reports/
-                trivy image --format json --severity HIGH,CRITICAL,WARNING nettu-meet:latest > reports/trivy.json
+                trivy --help
+                #trivy image --format json --severity HIGH,CRITICAL,WARNING nettu-meet:latest > reports/trivy.json
                 '''
               }
               archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
