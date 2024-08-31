@@ -24,7 +24,7 @@ pipeline {
           steps {
             script {
                 sh '''
-                sudo apt install docker
+                sudo apt install docker.io
                 cd server/
                 docker build . -t nettu-meet:latest
                 sudo apt install trivy
