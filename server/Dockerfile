@@ -1,4 +1,4 @@
-FROM node:14.15.4
+FROM 22-alpine3.19
 
 # Install DEB dependencies and others.
 RUN \
