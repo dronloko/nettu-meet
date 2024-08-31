@@ -103,7 +103,7 @@ pipeline {
             unstash "owaspzap-report"
             sh '''
               apt update
-              apt install jq
+              apt install -y jq
               cd reports/
               e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
               w=$(cat semgrep.json | jq | grep -iE '"severity": "WARNING"' | wc -l)
@@ -135,6 +135,19 @@ pipeline {
               fi
             '''
           }
+      }
+      stage { 'toxic repos' } {
+        agent { label "dind" }
+        steps {
+          unstash "semgrep-report"
+          sh '''
+          cd reports/
+          wget https://github.com/toxic-repos/toxic-repos/blob/main/data/json/toxic-repos.json
+          cat bom.json | jq -r '.[]' | grep -iE "\"name\": \"[a-z0-9]+\"" | awk -F " " '{ print $2 }' | awk -F "\"" '{ print $2 }' > packages
+          while read package; do grep -iE "\"name\": \"$package\"" toxic-repos.json; done < packages > packages_scan
+          '''
+          archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+        }
       }
   }
 }
