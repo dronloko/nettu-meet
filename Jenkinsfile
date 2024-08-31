@@ -29,10 +29,15 @@ pipeline {
                 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
                 sudo apt-get update
                 sudo apt-get install trivy
-                cd server
-                docker build . -t nettu-meet:latest -f Dockerfile
                 mkdir reports/
-                trivy image --format json nettu-meet:latest > reports/trivy.json
+                cd server
+                docker build . -t nettu-meet-server:latest -f Dockerfile
+                trivy image --format cyclonedx --output reports/sbom_frontend.json nettu-meet:latest
+                trivy sbom reports/sbom_server.json
+                cd ../frontend
+                docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
+                trivy image --format cyclonedx --output reports/sbom_frontend.json nettu-meet-frontend:latest
+                trivy sbom reports/sbom_frontend.json
                 '''
               }
               archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
