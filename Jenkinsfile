@@ -18,15 +18,15 @@ pipeline {
               . venv/bin/activate
               pip install semgrep
               mkdir reports/
-              semgrep scan --config=auto . --exclude=venv --json > reports/semgrep.json
+              semgrep scan --config=auto . --exclude=venv --json > semgrep.json
               '''
-              archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-              stash name: 'reports/semgrep.json', includes: "semgrep-report"
+              archiveArtifacts artifacts: 'semgrep.json', allowEmptyArchive: true
+              stash name: 'semgrep.json', includes: "semgrep-report"
             }
           }
         }
       }
-      stage ('trivy') {
+      /*stage ('trivy') {
           agent { label "dind" }
           steps {
             script {
@@ -79,7 +79,7 @@ pipeline {
           archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           stash includes: 'reports/owaspzap.json', name: 'owaspzap-report'
         }
-      }
+      }*/
       /*stage ('defect dojo') {
         steps {
           //unstash "semgrep-report"
@@ -96,7 +96,6 @@ pipeline {
       }*/
       stage ('quality gate') {
           steps {
-            
             unstash "semgrep-report"
             //unstash "trivy-report"
             //unstash "owaspzap-report
