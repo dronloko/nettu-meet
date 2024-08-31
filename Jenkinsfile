@@ -3,6 +3,11 @@ pipeline {
   environment {
     DEPTRACK_URL="https://s410-exam.cyber-ed.space:8081"
     DEPTRACK_API_KEY="odt_SfCq7Csub3peq7Y6lSlQy5Ngp9sSYpJl"
+    DOJO_URL="https://s410-exam.cyber-ed.space:8083"
+    DOJO_API_TOKEN="c5b50032ffd2e0aa02e2ff56ac23f0e350af75b4"
+    PROJECT_ID=31337
+    ENGAGEMENT_ID=
+    
   }
     stages {
       /*stage ('semgrep') {
@@ -41,7 +46,8 @@ pipeline {
                 trivy sbom -f json -o ../reports/trivy.json ../reports/sbom.json
                 '''
                 archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-                stash includes: 'reports/sbom*.json', name: 'sbom'
+                stash includes: 'reports/sbom.json', name: 'sbom'
+                stash includes: 'reports/trivy.json', name: 'trivy-report'
               }
           }
       }
@@ -57,11 +63,10 @@ pipeline {
           -H "Content-Type:multipart/form-data" -H "X-Api-Key:${DEPTRACK_API_KEY}" \
           -F "autoCreate=true" -F "projectName=dronloko" -F "projectVersion=1.0" -F "bom=@sbom.json")
           echo $response_code
-          curl -k -X GET "${DEPTRACK_URL}/api/v1/project/dronloko/1.0" -H "X-Api-Key:${DEPTRACK_API_KEY}"
           '''
         }
       }
-      stage ('owasp zap') {
+      /*stage ('owasp zap') {
         agent { label "dind" }
         steps {
           sh '''
@@ -75,8 +80,18 @@ pipeline {
           cp $(pwd)/owaspzap.json reports/
           '''
           archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
-          stash includes: 'reports/owaspzap.json', name: 'owaspzap'
+          stash includes: 'reports/owaspzap.json', name: 'owaspzap-report'
         }
-      }
+      }*/
+      stage ('defect dojo') {
+        steps {
+          #unstash "semgrep-report"
+          unstash "trivy-report"
+          #unstash "owaspzap-report
+          cd reports/
+          curl -X 'POST' -kL 'https://s410-exam.cyber-ed.space:8083/api/v2/import-scan/' -H 'accept: application/json' -H 'Authorization: Token c5b50032ffd2e0aa02e2ff56ac23f0e350af75b4' -H 'Content-Type: multipart/form-data' -F 'active=true' -F 'verified=true' -F'deduplication_on_engagement=true' -F 'minimum_severity=High' -F 'scan_date=2024-08-31' -F 'engagement_end_date=2024-08-31' -F 'group_by=component_name' -F 'tags=' -F 'product_name=dronloko' -F 'file=@trivy.json;type=application/json' -F 'auto_create_context=true' -F 'scan_type=Trivy Scan' -F 'engagement=1'
+          '''
+        }
+      }      
   }
 }
