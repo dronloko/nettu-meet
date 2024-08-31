@@ -57,6 +57,7 @@ pipeline {
           -H "Content-Type:multipart/form-data" -H "X-Api-Key:${DEPTRACK_API_KEY}" \
           -F "autoCreate=true" -F "projectName=dronloko" -F "projectVersion=1.0" -F "bom=@sbom.json")
           echo $response_code
+          curl -k -X GET "${DEPTRACK_URL}/api/v1/projects" -H "X-Api-Key:${DEPTRACK_API_KEY}"
           '''
         }
       }
@@ -67,8 +68,8 @@ pipeline {
           mkdir reports/
           curl -L -o ZAP_2.15.0_Linux.tar.gz https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
           tar xzf ZAP_2.15.0_Linux.tar.gz          
-          ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout ./owaspzap.json
-          cp ./owaspzap.json reports/
+          ZAP_2.15.0/zap.sh -cmd -quickurl https://s410-exam.cyber-ed.space:8084 -quickout owaspzap.json
+          cp owaspzap.json reports/
           '''
           archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
           stash includes: 'reports/owaspzap.json', name: 'owaspzap'
