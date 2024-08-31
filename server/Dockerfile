@@ -3,8 +3,8 @@ FROM node:22-bookworm
 # Install DEB dependencies and others.
 RUN \
     set -x \
-    && sudo apt-get update \
-    && sudo apt-get install -y net-tools build-essential
+    && apt-get update
+    #&& apt-get install -y net-tools build-essential
 
 WORKDIR /app
 
