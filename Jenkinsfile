@@ -34,9 +34,10 @@ pipeline {
                 sudo apt-get update
                 sudo apt-get install trivy
                 mkdir reports/
+                mkdir 
                 cd server
                 docker build . -t nettu-meet-server:latest -f Dockerfile
-                trivy image --format cyclonedx -o ../reports/sbom_server.json nettu-meet-server:latest
+                trivy image --format cyclonedx -o ../sbom/sbom_server.json nettu-meet-server:latest
                 trivy sbom -f json -o ../reports/trivy_server.json ../reports/sbom_server.json
                 cd ../frontend
                 docker build . -t nettu-meet-frontend:latest -f docker/Dockerfile
@@ -45,7 +46,20 @@ pipeline {
                 '''
               }
               archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
+              stash includes: 'reports/sbom*.json', name: 'sbom'
           }
+      }
+      stage ('deptrack') {
+        agent { label "dind" }
+        steps {
+          dir("reports/")
+          {
+              unstash "sbom"
+          }
+          sh '''
+          ls *.json
+          '''
+        }
       }
   }
 }
