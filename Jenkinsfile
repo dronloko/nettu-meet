@@ -12,7 +12,7 @@ pipeline {
               . venv/bin/activate
               pip install semgrep
               mkdir reports/
-              semgrep ci --config=auto --json > reports/semgrep.json
+              semgrep scan --config=auto . --json > reports/semgrep.json
               '''
             }
             archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
@@ -20,6 +20,7 @@ pipeline {
         }
       }
       stage ('trivy') {
+          agent { label "trivy-0000su67a2m79" }
           steps {
             script {
                 sh '''
