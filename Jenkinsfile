@@ -99,7 +99,7 @@ pipeline {
           steps {
             unstash "semgrep-report"
             unstash "trivy-report"
-            unstash "owaspzap-report
+            unstash "owaspzap-report"
             cd reports/
             sh '''
               e=$(cat semgrep.json | jq | grep -iE '"severity": "ERROR"' | wc -l)
