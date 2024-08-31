@@ -13,7 +13,7 @@ pipeline {
               pip install semgrep
               mkdir reports/
               #semgrep scan --config=auto . --exclude=venv --json > reports/semgrep.json
-              semgrep --help
+              semgrep scan --help
               '''
             }
             archiveArtifacts artifacts: 'reports/*', allowEmptyArchive: true
