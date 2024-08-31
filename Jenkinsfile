@@ -95,7 +95,7 @@ pipeline {
           '''
         }
       }
-      stage ('defect dojo 2') {
+      /*stage ('defect dojo 2') {
         agent { label "dind" }
         steps {
           sh '''
@@ -154,7 +154,7 @@ pipeline {
                       -F "scan_date=$(date +%F)"
           '''
         }
-      }
+      }*/
       stage ('quality gate') {
           agent { label "dind" }
           steps {
